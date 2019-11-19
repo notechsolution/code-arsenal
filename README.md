@@ -1,2 +1,2 @@
-# code-arsenal-
+# code-arsenal
 programmer's coding weapon store
