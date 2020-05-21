@@ -50,6 +50,7 @@ public class RandomUtil {
 
     }
 
+
     public static String generate_alphaString_using_Random(int length) {
         Random random = new Random();
         StringBuffer buffer = new StringBuffer();
