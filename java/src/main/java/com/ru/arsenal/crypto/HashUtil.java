@@ -31,12 +31,13 @@ public class HashUtil {
   }
 
   public static void testHashSalt() throws NoSuchAlgorithmException {
-    String content = "password1";
+    String content = "strongpassword";
     System.out.println(String.format("'%s' m5 hash          -> %s", content, md5(content)));
     String salt = RandomStringUtils.randomAlphabetic(10);
+    System.out.println(salt.toLowerCase());
     System.out.println(String.format("'%s' md5 hash+salt    -> %s", content, md5WithSalt(content, salt)));
     System.out.println(String.format("'%s' sha256 hash      -> %s", content, sha2(content)));
-    System.out.println(String.format("'%s' sha256 hash+salt -> %s", content, sha256WithSalt(content, salt)));
+    System.out.println(String.format("'%s' sha256 hash+salt -> %s", content, sha256WithSalt(content, salt.toLowerCase())));
   }
 
   public static String md5(String content) throws NoSuchAlgorithmException {
