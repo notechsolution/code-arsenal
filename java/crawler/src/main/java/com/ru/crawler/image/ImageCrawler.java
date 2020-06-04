@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 public class ImageCrawler extends WebCrawler{
 
   private static final Pattern filters = Pattern.compile(
-      ".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf" +
-          "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+      ".*(\\\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf\" +\n"
+          + "        \"|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 
-  private static final Pattern imgPatterns = Pattern.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
+  private static final Pattern imgPatterns = Pattern.compile(".*\\/tuku\\/.*(\\.(jpg|png))$");
 
   private final File storageFolder;
   private final List<String> crawlDomains;
@@ -50,7 +50,6 @@ public class ImageCrawler extends WebCrawler{
   @Override
   public void visit(Page page) {
     String url = page.getWebURL().getURL();
-
     // We are only interested in processing images which are bigger than 10k
     if (!imgPatterns.matcher(url).matches() ||
         !((page.getParseData() instanceof BinaryParseData) ||

@@ -6,17 +6,20 @@ import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ImageCrawlController {
 
+  public static List<String> crawlDomains = Arrays.asList("http://pic.114nz.com/guoshubinghai/");
   public static void main(String[] args) throws Exception {
-    CrawlConfig config = new CrawlConfig();
+    System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 
+    CrawlConfig config = new CrawlConfig();
     // Set the folder where intermediate crawl data is stored (e.g. list of urls that are extracted from previously
     // fetched pages and need to be crawled later).
-    config.setCrawlStorageFolder("/tmp/crawler4j/");
+    config.setCrawlStorageFolder("/tmp/crawler4j/guoshubinghai/");
 
     // Number of threads to use during crawling. Increasing this typically makes crawling faster. But crawling
     // speed depends on many other factors as well. You can experiment with this to figure out what number of
@@ -24,13 +27,11 @@ public class ImageCrawlController {
     int numberOfCrawlers = 8;
 
     // Where should the downloaded images be stored?
-    File storageFolder = new File("/tmp/crawled-images/");
+    File storageFolder = new File("/tmp/crawled-images/guoshubinghai/");
 
     // Since images are binary content, we need to set this parameter to
     // true to make sure they are included in the crawl.
     config.setIncludeBinaryContentInCrawling(true);
-
-    List<String> crawlDomains = Arrays.asList("https://uci.edu/");
 
     PageFetcher pageFetcher = new PageFetcher(config);
     RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
