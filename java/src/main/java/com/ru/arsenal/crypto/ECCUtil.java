@@ -5,6 +5,7 @@ import java.security.KeyPairGenerator;
 import java.security.Security;
 import java.util.Base64;
 import javax.crypto.Cipher;
+import org.apache.tomcat.util.buf.HexUtils;
 import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -39,8 +40,8 @@ public class ECCUtil {
     decrypts.init(Cipher.DECRYPT_MODE, privateKey);
 
     byte[] cipherText = encryptors.doFinal(text.getBytes());
-    logger.info("plainText '{}' encrypted as: {}", text, cipherText);
+    logger.info("plainText '{}' encrypted as: {}", text, HexUtils.toHexString(cipherText));
     byte[] plainText = decrypts.doFinal(cipherText);
-    logger.info("cipherText '{}' decrypted as: {}", cipherText, plainText);
+    logger.info("cipherText '{}' decrypted as: {}", HexUtils.toHexString(cipherText), new String(plainText));
   }
 }
