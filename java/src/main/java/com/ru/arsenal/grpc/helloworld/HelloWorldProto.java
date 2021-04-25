@@ -33,31 +33,24 @@ public final class HelloWorldProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020helloworld.proto\022\nhelloworld\"\034\n\014HelloR" +
-      "equest\022\014\n\004name\030\001 \001(\t\"\035\n\nHelloReply\022\017\n\007me" +
-      "ssage\030\001 \001(\t2I\n\007Greeter\022>\n\010SayHello\022\030.hel" +
-      "loworld.HelloRequest\032\026.helloworld.HelloR" +
-      "eply\"\000B1\n\026com.ru.gprc.helloworldB\017HelloW" +
-      "orldProtoP\001\242\002\003HLWb\006proto3"
+      "\n\020helloworld.proto\022\nhelloworld\")\n\014HelloR" +
+      "equest\022\014\n\004name\030\001 \001(\t\022\013\n\003age\030\002 \001(\003\"\035\n\nHel" +
+      "loReply\022\017\n\007message\030\001 \001(\t2I\n\007Greeter\022>\n\010S" +
+      "ayHello\022\030.helloworld.HelloRequest\032\026.hell" +
+      "oworld.HelloReply\"\000B9\n\036com.ru.arsenal.gr" +
+      "pc.helloworldB\017HelloWorldProtoP\001\242\002\003HLWb\006" +
+      "proto3"
     };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        });
     internal_static_helloworld_HelloRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_helloworld_HelloRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_helloworld_HelloRequest_descriptor,
-        new java.lang.String[] { "Name", });
+        new java.lang.String[] { "Name", "Age", });
     internal_static_helloworld_HelloReply_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_helloworld_HelloReply_fieldAccessorTable = new

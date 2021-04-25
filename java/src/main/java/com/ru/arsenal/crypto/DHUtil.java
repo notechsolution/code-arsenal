@@ -23,6 +23,7 @@ public class DHUtil {
 
   static Logger logger = LoggerFactory.getLogger("DHUtil");
 
+  //http://www.cs.ucf.edu/~dmarino/ucf/cis3362/progs/ECC.java
   public static void main(String[] args)
       throws Exception {
     BigInteger p = BigInteger.probablePrime(512, new Random());

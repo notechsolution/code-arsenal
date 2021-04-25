@@ -53,11 +53,11 @@ public class HelloWorldServer {
     }
   }
 
-  private class GreeterImpl extends GreeterGrpc.GreeterImplBase {
+  static class GreeterImpl extends GreeterGrpc.GreeterImplBase {
 
     @Override
     public void sayHello(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
-      HelloReply helloReply = HelloReply.newBuilder().setMessage("Hello My Dear " + request.getName()).build();
+      HelloReply helloReply = HelloReply.newBuilder().setMessage("Hello My Dear " + request.getName() +"with age "+request.getAge()).build();
       responseObserver.onNext(helloReply);
       responseObserver.onCompleted();
     }
