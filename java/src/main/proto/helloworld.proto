@@ -14,7 +14,7 @@ service Greeter{
 
 message HelloRequest {
   string name = 1;
-  int64 age=2;
+  int64 age=20;
 }
 
 message HelloReply {

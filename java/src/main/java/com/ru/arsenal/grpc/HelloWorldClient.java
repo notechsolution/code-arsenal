@@ -33,6 +33,11 @@ public class HelloWorldClient {
     HelloRequest request = HelloRequest.newBuilder().setName(name).setAge(age).build();
     HelloReply response = null;
     try {
+      // Varints are a method of serializing integers using one or more bytes
+      // Each byte in a varint, except the last byte, has the most significant bit (msb) set – this indicates that there are further bytes to come. The lower 7 bits of each byte are used to store the two's complement representation of the number in groups of 7 bits, least significant group first.
+      // 257:  10000001 00000010   0000010 ++ 0000001 (reverse)
+      // 255:  11111111 00000001   0000001 ++ 1111111
+      // 329:  11001001 00000010   0000010 ++ 1001001
       // 0a 04 4f4f434c 10 58 (hex)
       // 0a: Tag, 00001 010 (field sequence, name==1, 00001) + (field type - string, 2, 010)
       // 04: value length, 4
@@ -74,8 +79,10 @@ public class HelloWorldClient {
     List<String> companies = Arrays.asList("Google", "OOCL", "COSCO", "HUAWEI","TENCENT","ALI" ,"Microsoft", "BYTEDANCE");
     try {
       client.greet("OOCL", 88);
-      client.greet("COSCO_aaaaaaaaaaaaaaaaaaaaaaaaaverylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring===", 100);
-//      client.greet("COSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====", 100);
+      client.greet("COSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring===aaaaaaaaaaaaaaaaaaaaaaaaa", 100);
+      client.greet("COSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring===aaaaaaaaaaaaaaaaaaaaaaa", 100);
+      client.greet("COSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====", 100);
+      client.greet("COSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring===aaaaaaaaaaaaaaaaaaaaaaaCOSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring===aaaaaaaaaaaaaaaaaaaaaaa", 100);
 //      for (int i = 0; i < 8; i++) {
 //        client.greet(companies.get(RandomUtils.nextInt(0, 8)));
 //        Thread.sleep(1000);
