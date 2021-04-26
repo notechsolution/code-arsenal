@@ -3,6 +3,10 @@ package com.ru.arsenal.grpc;
 import com.ru.arsenal.grpc.helloworld.GreeterGrpc;
 import com.ru.arsenal.grpc.helloworld.HelloReply;
 import com.ru.arsenal.grpc.helloworld.HelloRequest;
+import com.ru.arsenal.grpc.helloworld.ReplicatorGrpc;
+import com.ru.arsenal.grpc.helloworld.ReplicatorRequest;
+import com.ru.arsenal.grpc.helloworld.ReplicatorResponse;
+import com.ru.arsenal.grpc.helloworld.ReplicatorResponse.Builder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -20,6 +24,7 @@ public class HelloWorldServer {
   private void start() throws IOException {
     server = ServerBuilder.forPort(port)
         .addService(new GreeterImpl())
+        .addService(new ReplicatorImpl())
         .build()
         .start();
 
@@ -57,8 +62,32 @@ public class HelloWorldServer {
 
     @Override
     public void sayHello(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
-      HelloReply helloReply = HelloReply.newBuilder().setMessage("Hello My Dear " + request.getName() +"with age "+request.getAge()).build();
+      HelloReply helloReply = HelloReply.newBuilder()
+          .setMessage("Hello My Dear " + request.getName() + "with age " + request.getAge())
+          .build();
       responseObserver.onNext(helloReply);
+      responseObserver.onCompleted();
+    }
+  }
+
+  static class ReplicatorImpl extends ReplicatorGrpc.ReplicatorImplBase {
+
+    @Override
+    public void doReplicate(ReplicatorRequest request,
+        StreamObserver<ReplicatorResponse> responseObserver) {
+      String message = String
+          .format("replicator type %s request by %s with count %d isValid %s, targets: ",
+              request.getReplicatorType(), request.getRequestor(), request.getCount(),
+              request.getValid());
+      for (int i = 0; i < request.getTargetsCount(); i++) {
+        message += request.getTargets(i);
+      }
+      Builder responseBuilder = ReplicatorResponse.newBuilder()
+          .setResult(message);
+      for (int i = 0; i < request.getTargetsCount(); i++) {
+        responseBuilder.addTargets(request.getTargets(i));
+      }
+      responseObserver.onNext(responseBuilder.build());
       responseObserver.onCompleted();
     }
   }

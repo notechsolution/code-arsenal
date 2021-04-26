@@ -12,6 +12,10 @@ service Greeter{
   rpc SayHello(HelloRequest) returns(HelloReply){}
 }
 
+service Replicator {
+  rpc DoReplicate(ReplicatorRequest) returns(ReplicatorResponse){}
+}
+
 message HelloRequest {
   string name = 1;
   int64 age=20;
@@ -19,4 +23,24 @@ message HelloRequest {
 
 message HelloReply {
   string message = 1;
+}
+
+message ReplicatorRequest {
+  string requestor = 1;
+  int32 count = 2;
+  bool valid = 3;
+  repeated string targets = 4;
+
+  enum ReplicatorType {
+    NORMAL = 0;
+    ADHOT = 1;
+    REQUEST = 2;
+  }
+
+  ReplicatorType replicator_type = 5;
+}
+
+message ReplicatorResponse {
+  string result = 1;
+  repeated string targets = 2;
 }

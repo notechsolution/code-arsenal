@@ -1,8 +1,13 @@
 package com.ru.arsenal.grpc;
 
+import com.ru.arsenal.crypto.RandomUtil;
 import com.ru.arsenal.grpc.helloworld.GreeterGrpc;
 import com.ru.arsenal.grpc.helloworld.HelloReply;
 import com.ru.arsenal.grpc.helloworld.HelloRequest;
+import com.ru.arsenal.grpc.helloworld.ReplicatorGrpc;
+import com.ru.arsenal.grpc.helloworld.ReplicatorRequest;
+import com.ru.arsenal.grpc.helloworld.ReplicatorRequest.ReplicatorType;
+import com.ru.arsenal.grpc.helloworld.ReplicatorResponse;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -11,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +26,11 @@ public class HelloWorldClient {
   private static final Logger logger = LoggerFactory.getLogger("HelloWorldClient");
 
   private final GreeterGrpc.GreeterBlockingStub blockingStub;
+  private final ReplicatorGrpc.ReplicatorBlockingStub replicatorBlockingStub;
 
   public HelloWorldClient(Channel channel) {
     blockingStub = GreeterGrpc.newBlockingStub(channel);
+    replicatorBlockingStub = ReplicatorGrpc.newBlockingStub(channel);
   }
 
 //  public void shutdown() throws InterruptedException {
@@ -51,6 +59,18 @@ public class HelloWorldClient {
     }
     logger.debug("Data encoded in protobuf with length {} : {}", request.getSerializedSize(), HexUtils.toHexString(request.toByteArray()));
     logger.info("Greeting:" + response.getMessage());
+  }
+
+  public void replicate(){
+    ReplicatorRequest request = ReplicatorRequest.newBuilder().setCount(RandomUtils.nextInt())
+        .setReplicatorType(ReplicatorType.NORMAL)
+        .setRequestor("Lames")
+        .setValid(true)
+        .addTargets("server"+ RandomUtils.nextInt())
+        .build();
+    ReplicatorResponse response = replicatorBlockingStub
+        .doReplicate(request);
+    logger.info("Replicate Result:" + response.getResult()+" for targets count:"+ request.getTargetsCount());
   }
 
   public static void main(String[] args) throws InterruptedException {
@@ -83,10 +103,7 @@ public class HelloWorldClient {
       client.greet("COSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring===aaaaaaaaaaaaaaaaaaaaaaa", 100);
       client.greet("COSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====", 100);
       client.greet("COSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring===aaaaaaaaaaaaaaaaaaaaaaaCOSCO_verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring=====verylongstring===aaaaaaaaaaaaaaaaaaaaaaa", 100);
-//      for (int i = 0; i < 8; i++) {
-//        client.greet(companies.get(RandomUtils.nextInt(0, 8)));
-//        Thread.sleep(1000);
-//      }
+      client.replicate();
     }finally {
       channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
     }
