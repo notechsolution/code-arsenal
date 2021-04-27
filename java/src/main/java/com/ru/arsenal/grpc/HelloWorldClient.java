@@ -43,7 +43,7 @@ public class HelloWorldClient {
     try {
       // Varints are a method of serializing integers using one or more bytes
       // Each byte in a varint, except the last byte, has the most significant bit (msb) set – this indicates that there are further bytes to come. The lower 7 bits of each byte are used to store the two's complement representation of the number in groups of 7 bits, least significant group first.
-      // 257:  10000001 00000010   0000010 ++ 0000001 (reverse)
+      // 257:  10000001 00000010   0000010 ++ 0000001 ((drop the msb and reverse the groups of 7 bits))
       // 255:  11111111 00000001   0000001 ++ 1111111
       // 329:  11001001 00000010   0000010 ++ 1001001
       // 0a 04 4f4f434c 10 58 (hex)
