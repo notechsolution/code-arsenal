@@ -4,8 +4,8 @@ const access = console;
 const errorLog = console;
 
 const SOCKET_TIMEOUT = process.env.SOCKET_TIMEOUT || 60000;
-const destHost = '10.222.145.187';
-const destPort = '55555';
+const destHost = process.env.DEST_HOST || '';
+const destPort = process.env.DEST_PORT || 0;
 
 function connect(socket) {
     const startAt = process.hrtime();
