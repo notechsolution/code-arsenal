@@ -31,16 +31,6 @@ function connect(socket) {
         errorLog.log('Error : ' + error);
     });
 }
-
-function _getTotalTime(startAt) {
-    // time elapsed from request start
-    const elapsed = process.hrtime(startAt)
-    // cover to milliseconds
-    const ms = (elapsed[0] * 1e3) + (elapsed[1] * 1e-6)
-    // return truncated value
-    return ms.toFixed(3)
-}
-
 const server = net.createServer();
 server.on('listening', () => console.log('Server is listening'));
 server.on('connection', connect);
@@ -52,3 +42,13 @@ const port = parseInt(process.env.TCP_PORT) || 33555;
 server.listen(port, () => {
     console.log('Server is listening at port ' + port);
 })
+
+
+function _getTotalTime(startAt) {
+    // time elapsed from request start
+    const elapsed = process.hrtime(startAt)
+    // cover to milliseconds
+    const ms = (elapsed[0] * 1e3) + (elapsed[1] * 1e-6)
+    // return truncated value
+    return ms.toFixed(3)
+}
