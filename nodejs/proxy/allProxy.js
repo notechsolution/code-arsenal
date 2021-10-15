@@ -3,8 +3,11 @@ const net = require('net');
 const {URL} = require('url');
 const requestIP = require('request-ip');
 const _ = require('lodash');
-const access = console;
-const error = console;
+const accessLog = console;
+const errorLog = console;
+const SOCKET_TIMEOUT = process.env.SOCKET_TIMEOUT || 60000;
+const destHost = process.env.DEST_HOST || '';
+const destPort = process.env.DEST_PORT || 0;
 
 function request(srcReq, srcRes) {
     const url = new URL(srcReq.url);
@@ -22,11 +25,11 @@ function request(srcReq, srcRes) {
         srcRes.writeHead(destResponse.statusCode, destResponse.headers);
         destResponse.pipe(srcRes)
         logLine += ` ${destResponse.statusCode} ${_.get(destResponse.headers,"content-type",'-')} ${_getTotalTime(startAt)}`
-        access.log(logLine);
+        accessLog.log(logLine);
     }).on('error', e => {
         srcRes.end();
         logLine += ` ERROR ${_getTotalTime(startAt)}`;
-        error.log(logLine + '\r\n' + e)
+        errorLog.log(logLine + '\r\n' + e)
     })
     srcReq.pipe(destRequest);
 }
@@ -45,14 +48,36 @@ function connect(srcReq, srcSocket) {
         srcSocket.write('HTTP/1.1 200 Connection Established\r\n\r\n');
         destSocket.pipe(srcSocket);
         logLine += ` ${_getTotalTime(startAt)}`
-        access.log(logLine);
+        accessLog.log(logLine);
     }).on('error', e => {
         srcSocket.end();
         logLine += ` ERROR ${_getTotalTime(startAt)}`;
-        error.log(logLine + '\r\n' + e)
+        errorLog.log(logLine + '\r\n' + e)
     })
-
     srcSocket.pipe(destSocket);
+}
+
+function connection(socket) {
+    const startAt = process.hrtime();
+    let logLine = `${Date.now()} ${socket.remoteAddress} ${socket.remotePort} ${socket.remoteFamily}`;
+    accessLog.log(logLine);
+    socket.setTimeout(SOCKET_TIMEOUT, () => {
+        errorLog.log(`${logLine} Socket Timeout ${SOCKET_TIMEOUT}`);
+    })
+    const destSocket = net.connect(parseInt(destPort), destHost, () => {
+        destSocket.pipe(socket);
+    }).on('error', e => {
+        socket.end();
+    });
+    socket.pipe(destSocket);
+    socket.on('timeout', function () {
+        logLine += ` ${_getTotalTime(startAt)}`
+        errorLog.log(logLine);
+        socket.end('Timed out!');
+    });
+    socket.on('error',function(error){
+        errorLog.log('Error : ' + error);
+    });
 }
 
 const PORT = parseInt(process.env.PORT) || 8888;
@@ -63,3 +88,12 @@ http.createServer()
     .listen(PORT, '0.0.0.0', null, () => {
         console.log(`Started My Proxy at port ${PORT}.`)
     });
+
+const tcpPort = parseInt(process.env.TCP_PORT) || 33555;
+net.createServer()
+    .on('listening', () => console.log('Server is listening'))
+    .on('connection', connection)
+    .on('error', e => console.log(`Error found ${e}`))
+    .listen(tcpPort, () => {
+    console.log('Server is listening at port ' + tcpPort);
+})

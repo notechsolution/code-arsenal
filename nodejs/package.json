@@ -10,6 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@opentelemetry/api": "^1.0.3",
+    "@opentelemetry/auto-instrumentations-node": "^0.25.0",
+    "@opentelemetry/metrics": "^0.24.0",
+    "@opentelemetry/sdk-node": "^0.26.0",
+    "express": "^4.17.1",
     "loadtest": "^5.0.3",
     "lodash": "^4.17.21",
     "request-ip": "^2.1.3"

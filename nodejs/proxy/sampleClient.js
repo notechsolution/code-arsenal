@@ -1,21 +1,21 @@
 const http = require("http");
 const Tls = require('tls');
 
-// console.log(`#1: get HTTP request`);
-// const options = {
-//     host: "localhost",
-//     port: 8888,
-//     path: "http://www.baidu.com",
-//     headers: {
-//         Host: "www.baidu.com"
-//     },
-//     rejectUnauthorized: true
-// };
-// http.get(options, function(res) {
-//     // console.log(res);
-//     res.pipe(process.stdout);
-// });
-//
+console.log(`#1: get HTTP request`);
+const options = {
+    host: "localhost",
+    port: 8888,
+    path: "http://www.baidu.com",
+    headers: {
+        Host: "www.baidu.com"
+    },
+    rejectUnauthorized: true
+};
+http.get(options, function(res) {
+    // console.log(res);
+    res.pipe(process.stdout);
+});
+
 console.log(`#2: get HTTPS request`);
 const targetHost = 'www.baidu.com';
 const req = http.request({
