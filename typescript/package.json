@@ -1,0 +1,7 @@
+{
+  "name": "typescript for studying",
+  "version": "1.0.0",
+  "dependencies": {
+    "typescript": "^4.5.2"
+  }
+}
